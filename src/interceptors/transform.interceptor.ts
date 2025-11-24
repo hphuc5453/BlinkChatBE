@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MESSAGES } from 'src/commons/strings';
+import { AUTH_MESSAGES } from 'src/commons/strings';
 
 export interface Response<T> {
     data: T;
@@ -23,7 +23,7 @@ export class TransformInterceptor<T>
     ): Observable<Response<T>> {
         return next.handle().pipe(
             map((data) => {
-                let message = MESSAGES.SUCCESS;
+                let message = AUTH_MESSAGES.SUCCESS;
                 if (
                     data?.message &&
                     data?.message != '' &&

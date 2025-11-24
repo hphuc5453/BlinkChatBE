@@ -1,4 +1,4 @@
-export const MESSAGES = {
+export const AUTH_MESSAGES = {
     SUCCESS: 'Success',
     ERROR: 'Error',
 
