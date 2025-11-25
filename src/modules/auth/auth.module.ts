@@ -19,7 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         inject: [ConfigService],
         useFactory: () => ({
           secret: process.env.APP_SECRET,
-          signOptions: { expiresIn: '1d' }
+          signOptions: { expiresIn: '1w' }
         }),
       },
     ),

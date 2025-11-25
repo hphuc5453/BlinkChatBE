@@ -21,8 +21,6 @@ export class TokenInterceptor implements NestInterceptor {
     ): Observable<User> {
         return next.handle().pipe(
             map(user => {
-                console.log("INTERCEPT USER:", user);
-
                 const response = context.switchToHttp().getResponse<Response>();
                 const token = this.authService.signToken(user);
 
@@ -31,6 +29,7 @@ export class TokenInterceptor implements NestInterceptor {
                     httpOnly: true,
                     signed: true,
                     sameSite: 'strict',
+                    path: '/',
                     secure: process.env.NODE_ENV === 'production',
                 });
 

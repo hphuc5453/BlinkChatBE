@@ -18,7 +18,7 @@ async function bootstrap() {
       whitelist: false,
     }),
   );
-  
+
   app.use(cookieParser(process.env.APP_SECRET));
 
   app.useGlobalInterceptors(new TransformInterceptor());
