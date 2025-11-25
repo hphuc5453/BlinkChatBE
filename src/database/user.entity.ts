@@ -1,5 +1,6 @@
 import { Exclude } from "class-transformer";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import * as bcrypt from 'bcrypt';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, BeforeUpdate } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,9 +17,6 @@ export class User {
   @Exclude()
   password: string;
 
-  @Column({ nullable: true, type: 'text' })
-  token: string;
-
   @Column({ default: 'active' })
   status: string;
 
@@ -30,5 +28,18 @@ export class User {
 
   constructor(data: Partial<User> = {}) {
     Object.assign(this, data);
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword(): Promise<void> {
+    const salt = await bcrypt.genSalt();
+    if (!/^\$2[abxy]?\$\d+\$/.test(this.password)) {
+      this.password = await bcrypt.hash(this.password, salt);
+    }
+  }
+
+  async checkPassword(plainPassword: string): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, this.password);
   }
 }
