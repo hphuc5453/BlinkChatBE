@@ -6,3 +6,7 @@ export const AUTH_MESSAGES = {
     EMAIL_EXISTED: 'Email already existed',
     INVALID_TOKEN: 'Invalid token',
 }
+
+export const GLOBAL_EXCEPTION = {
+    INTERAL_SERVER_ERROR: 'Internal server error'
+}

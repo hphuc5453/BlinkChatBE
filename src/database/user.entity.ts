@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -12,6 +13,7 @@ export class User {
   name: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ nullable: true, type: 'text' })
@@ -25,4 +27,8 @@ export class User {
 
   @UpdateDateColumn({ name: "updated_at"})
   updatedAt: Date;
+
+  constructor(data: Partial<User> = {}) {
+    Object.assign(this, data);
+  }
 }
