@@ -17,18 +17,12 @@ export class User {
   @Column({ nullable: true, type: 'text' })
   token: string;
 
-  @Column({ default: false })
-  isVerified: boolean;
-
-  @Column({ type: 'timestamp', nullable: true })
-  lastLogin: Date;
-
   @Column({ default: 'active' })
   status: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "created_at"})
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: "updated_at"})
   updatedAt: Date;
 }
