@@ -5,4 +5,9 @@ export const AUTH_MESSAGES = {
     USER_NOT_FOUND: 'User not found',
     EMAIL_EXISTED: 'Email already existed',
     INVALID_TOKEN: 'Invalid token',
+    PASSWORD_INCORRECT: 'Password is incorrect'
+}
+
+export const GLOBAL_EXCEPTION = {
+    INTERAL_SERVER_ERROR: 'Internal server error'
 }

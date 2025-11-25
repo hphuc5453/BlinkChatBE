@@ -1,23 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/database/user.entity";
-import { Repository } from "typeorm";
+import { FindOneOptions, Repository } from "typeorm";
 
 @Injectable()
 export class UserService {
 
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
-    async findByEmail(email: string): Promise<User | null> {
-        return this.userRepository.findOne({ where: { email } });
+    async findOne(where: FindOneOptions<User>): Promise<User | null> {
+        const user = this.userRepository.findOne(where);
+        if (!user) {
+            throw new NotFoundException(`There isn't any user with identifier: ${where}`)
+        }
+        return user;
     }
 
-    async createUser(email: string, password: string, name: string) {
-        const newUser = this.userRepository.create({
-            email,
-            password,
-            name
-        });
+    async create(data: Partial<User>): Promise<User> {
+        const newUser = this.userRepository.create(data);
         return this.userRepository.save(newUser);
     }
 }
