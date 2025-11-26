@@ -4,4 +4,5 @@ export interface SignInInterface {
     readonly email: string;
     readonly token?: string;
     readonly status: string;
+    readonly sendbirdUserId: number;
 }

@@ -6,10 +6,11 @@ import { SignInInterface } from './interface/signin.interface';
 import { User } from 'src/database/user.entity';
 import { AUTH_MESSAGES } from 'src/commons/strings';
 import { JwtPayload } from './interface/jwt-payload.interface';
+import { SendbirdService } from '../sendbird/sendbird.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService, private jwtService: JwtService) { }
+    constructor(private userService: UserService, private jwtService: JwtService, private senbirdService: SendbirdService) { }
 
     async signIn(email: string, pass: string): Promise<User | null> {
         return this.validateUser(email, pass);
@@ -17,18 +18,23 @@ export class AuthService {
 
     async signUp(signUpDto: SignUpDto): Promise<SignInInterface> {
         const user = await this.userService.create(signUpDto);
+
+        const isCreated = await this.senbirdService.createUser(user);
+
+        if (isCreated) {
+            await this.userService.update(user.id, { sendbirdUserId: user.id });
+        }
+
         return {
             id: user.id,
             name: user.name,
             email: user.email,
             status: user.status,
-            token: undefined
+            sendbirdUserId: user.sendbirdUserId
         };
     }
 
     async validateUser(email: string, password: string): Promise<User | null> {
-        console.log("LOGIN INPUT:", email, password);
-
         let user: (User | null)
         try {
             user = await this.userService.findOne({ where: { email } });
