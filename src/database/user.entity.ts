@@ -4,16 +4,16 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 
 @Entity()
 export class User {
- @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   email: string;
 
-  @Column({ unique: true, name: 'sendbird_user_id'})
+  @Column({ unique: true, name: 'sendbird_user_id' })
   sendbirdUserId: number;
 
-  @Column({default: ''})
+  @Column({ default: '' })
   name: string;
 
   @Column()
@@ -23,10 +23,10 @@ export class User {
   @Column({ default: 'active' })
   status: string;
 
-  @CreateDateColumn({ name: "created_at"})
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: "updated_at"})
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
   constructor(data: Partial<User> = {}) {

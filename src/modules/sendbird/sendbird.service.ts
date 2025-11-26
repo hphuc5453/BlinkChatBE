@@ -2,6 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, ServiceUnavailableException } from "@nestjs/common";
 import { firstValueFrom } from "rxjs";
 import { User } from "src/database/user.entity";
+import { ChatChannel } from "../channels/interfaces/channel.interface";
 
 @Injectable()
 export class SendbirdService {
@@ -32,6 +33,23 @@ export class SendbirdService {
             return true;
         } catch (err) {
             throw new ServiceUnavailableException(err.response?.data)
+        }
+    }
+
+    async getChannelsByUser(userId: number): Promise<Array<ChatChannel>> {
+        try {
+            const res = await firstValueFrom(
+                this.http.get(
+                    `${this.sendbirdUrl}/users/${userId}/my_group_channels`,
+                    { headers: this.headers() }
+                )
+            );
+
+            return res.data["channels"];
+
+        } catch (err) {
+            console.error("Sendbird getUserChannels error:", err.response?.data || err);
+            throw err;
         }
     }
 }
