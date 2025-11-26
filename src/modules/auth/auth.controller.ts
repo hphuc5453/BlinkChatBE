@@ -24,6 +24,7 @@ export class AuthController {
             email: user.email,
             status: user.status,
             name: user.name,
+            sendbirdUserId: user.sendbirdUserId,
             token
         };
     }

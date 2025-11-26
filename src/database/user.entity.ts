@@ -10,6 +10,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ unique: true, name: 'sendbird_user_id'})
+  sendbirdUserId: number;
+
   @Column({default: ''})
   name: string;
 
