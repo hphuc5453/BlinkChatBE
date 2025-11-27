@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
 import { ChannelModule } from '../channels/channel.module';
+import { MessageModule } from '../messages/message.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ChannelModule } from '../channels/channel.module';
     }),
     AuthModule,
     UserModule,
-    ChannelModule
+    ChannelModule,
+    MessageModule
   ],
   controllers: [AppController],
   providers: [AppService],
