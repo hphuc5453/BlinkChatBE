@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
-import { User } from 'src/database/user.entity';
+import { User } from 'src/modules/user/user.schema';
 
 @Injectable()
 export class SessionSerializer extends PassportSerializer {

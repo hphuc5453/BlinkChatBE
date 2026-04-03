@@ -3,35 +3,16 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/modules/user/user.service';
 import { SignUpDto } from './dto/signup_dto';
 import { SignInInterface } from './interface/signin.interface';
-import { User } from 'src/database/user.entity';
+import { User } from 'src/modules/user/user.schema';
 import { AUTH_MESSAGES } from 'src/commons/strings';
 import { JwtPayload } from './interface/jwt-payload.interface';
-import { SendbirdService } from '../sendbird/sendbird.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService, private jwtService: JwtService, private senbirdService: SendbirdService) { }
+    constructor(private userService: UserService, private jwtService: JwtService) { }
 
     async signIn(email: string, pass: string): Promise<User | null> {
         return this.validateUser(email, pass);
-    }
-
-    async signUp(signUpDto: SignUpDto): Promise<SignInInterface> {
-        const user = await this.userService.create(signUpDto);
-
-        const isCreated = await this.senbirdService.createUser(user);
-
-        if (isCreated) {
-            await this.userService.update(user.id, { sendbirdUserId: user.id });
-        }
-
-        return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            status: user.status,
-            sendbirdUserId: user.sendbirdUserId
-        };
     }
 
     async validateUser(email: string, password: string): Promise<User | null> {
@@ -45,11 +26,11 @@ export class AuthService {
             )
         }
 
-        if (!await user?.checkPassword(password)) {
-            throw new UnauthorizedException(
-                AUTH_MESSAGES.PASSWORD_INCORRECT
-            )
-        }
+        // if (!await user?.comparePassword(password)) {
+        //     throw new UnauthorizedException(
+        //         AUTH_MESSAGES.PASSWORD_INCORRECT
+        //     )
+        // }
 
         return user;
     }

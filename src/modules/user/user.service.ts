@@ -1,27 +1,33 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/database/user.entity";
-import { FindOneOptions, Repository } from "typeorm";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { User } from "./user.schema";
 
 @Injectable()
 export class UserService {
 
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
+    constructor(@InjectModel(User.name) private readonly userModel: Model<User>) { }
 
-    async findOne(where: FindOneOptions<User>): Promise<User | null> {
-        const user = this.userRepository.findOne(where);
+    async findOne(where: any): Promise<User | null> {
+        const user = this.userModel.findOne(where);
         if (!user) {
             throw new NotFoundException(`There isn't any user with identifier: ${where}`)
         }
         return user;
     }
 
-    async create(data: Partial<User>): Promise<User> {
-        const newUser = this.userRepository.create(data);
-        return this.userRepository.save(newUser);
+    async create(data: any): Promise<User> {
+        try {
+            console.log('Data nhận được:', data);
+            const newUser = await this.userModel.create(data);
+            return newUser;
+        } catch (error) {
+            console.error('Lỗi Mongoose cụ thể:', error.message); // Nhìn vào terminal để xem lỗi gì
+            throw error;
+        }
     }
-    async update(id: number, patch: Partial<User>) {
-        await this.userRepository.update(id, patch);
-        return this.userRepository.findOne({ where: { id } });
+
+    async getAll(): Promise<User[]> {
+        return this.userModel.find();
     }
 }

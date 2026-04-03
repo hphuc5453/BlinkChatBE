@@ -8,12 +8,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { SessionSerializer } from './session.serializer';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SenbirdModule } from '../sendbird/sendbird.module';
 
 @Module({
   imports: [
     UserModule,
-    SenbirdModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync(
       {

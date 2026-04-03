@@ -1,29 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
-import { ChannelModule } from '../channels/channel.module';
+import { MongooseModule } from '@nestjs/mongoose';
+// ... các import khác
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
-      synchronize: false,
-      autoLoadEntities: true,
-      ssl: {
-        rejectUnauthorized: false,
-      }
+    ConfigModule.forRoot({
+      isGlobal: true, // Để các module khác không cần import lại ConfigModule
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONOGODB_CONNECTION'),
+        dbName: 'sample_mflix'
+      }),
     }),
     AuthModule,
     UserModule,
-    ChannelModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  // ...
 })
-export class AppModule {}
+export class AppModule { }
